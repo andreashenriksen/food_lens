@@ -5,7 +5,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
-        android:label="food_lens"
+        android:label="Food Lens"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
