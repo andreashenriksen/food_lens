@@ -1,6 +1,6 @@
 # Food Lens
 
-**Calorie and nutrition tracking for Norwegian groceries — scan the barcode, get the declaration.**
+**Calorie and nutrition tracking for Norwegian groceries.**
 
 [![CI](https://github.com/andreashenriksen/food_lens/actions/workflows/ci.yaml/badge.svg)](https://github.com/andreashenriksen/food_lens/actions/workflows/ci.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -8,8 +8,8 @@
 [![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20web%20%7C%20desktop-lightgrey)](#platform-support)
 
 Product data comes from [Kassalapp](https://kassal.app), which indexes Norwegian
-grocery chains — barcodes and product names from a Norwegian shop resolve
-reliably, where international food databases mostly do not.
+grocery chains, barcodes and product names from a Norwegian shop resolve
+reliably.
 
 ## What it does
 
@@ -87,7 +87,7 @@ lib/
 ```
 
 `DiaryController` is the single owner of the viewed day, the goal and that day's
-entries, which is what keeps Today and Plan — two views of the same state — in
+entries, which is what keeps Today and Plan in
 sync when either one writes.
 
 ### Decisions worth knowing before changing the code
