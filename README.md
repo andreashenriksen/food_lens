@@ -142,11 +142,6 @@ API client against a mocked transport, and the calorie and macro widgets.
 CI runs `dart format --set-exit-if-changed`, `flutter analyze --fatal-infos`
 and the test suite on every push, and builds a debug APK.
 
-## Disclaimer
-
-Calorie estimates and allergen information are indicative, sourced from
-Kassalapp, and not suitable for medical use. Always check the packaging.
-
 ## License
 
 [MIT](LICENSE) © Andreas Henriksen
