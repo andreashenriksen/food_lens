@@ -1,30 +1,96 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:food_lens/src/models/daily_goal.dart';
+import 'package:food_lens/src/models/nutrients.dart';
+import 'package:food_lens/src/ui/format.dart';
+import 'package:food_lens/src/ui/theme.dart';
+import 'package:food_lens/src/ui/widgets/calorie_ring.dart';
+import 'package:food_lens/src/ui/widgets/macro_bars.dart';
 
-import 'package:food_lens/main.dart';
+Widget _wrap(Widget child) => MaterialApp(
+  theme: buildTheme(Brightness.light),
+  home: Scaffold(body: Center(child: child)),
+);
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('CalorieRing', () {
+    testWidgets('shows calories left against the goal', (tester) async {
+      await tester.pumpWidget(
+        _wrap(const CalorieRing(eaten: 1200, planned: 0, goal: 2000)),
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(find.text('800'), findsOneWidget);
+      expect(find.text('kcal igjen'), findsOneWidget);
+      // Built from the formatter rather than a literal: the nb_NO grouping
+      // separator is a non-breaking space, not an ordinary one.
+      expect(
+        find.text('${formatKcal(1200)} / ${formatKcal(2000)}'),
+        findsOneWidget,
+      );
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    testWidgets('switches to an overshoot reading past the goal', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(const CalorieRing(eaten: 2300, planned: 0, goal: 2000)),
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(find.text('300'), findsOneWidget);
+      expect(find.text('kcal over'), findsOneWidget);
+    });
+  });
+
+  group('MacroBars', () {
+    testWidgets('shows progress against targets when they are set', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          const MacroBars(
+            eaten: Nutrients(protein: 60, carbs: 100, fat: 30),
+            goal: DailyGoal(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
+          ),
+        ),
+      );
+
+      expect(find.text('Protein'), findsOneWidget);
+      expect(find.text('60 g / 150 g'), findsOneWidget);
+    });
+
+    testWidgets('falls back to plain totals without targets', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const MacroBars(
+            eaten: Nutrients(protein: 60),
+            goal: DailyGoal(kcal: 2000),
+          ),
+        ),
+      );
+
+      expect(find.text('60 g'), findsOneWidget);
+      // Undeclared macros read as a dash rather than a misleading zero.
+      expect(find.text('–'), findsNWidgets(2));
+    });
+  });
+
+  group('NutritionTable', () {
+    testWidgets('renders a declaration with its basis', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const SingleChildScrollView(
+            child: NutritionTable(
+              nutrients: Nutrients(kcal: 271, fat: 12.5, saturatedFat: 7.2),
+              header: 'Per 100 g',
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Per 100 g'), findsOneWidget);
+      expect(find.text('271 kcal'), findsOneWidget);
+      expect(find.text('12,5 g'), findsOneWidget);
+      expect(find.text('– hvorav mettet'), findsOneWidget);
+    });
   });
 }
