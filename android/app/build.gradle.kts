@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.food_lens"
+    namespace = "io.github.andreashenriksen.foodlens"
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
@@ -15,10 +15,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.food_lens"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "io.github.andreashenriksen.foodlens"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -27,8 +24,9 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // No release keystore is checked in. Debug signing keeps
+            // `flutter build apk --release` working for anyone cloning this;
+            // a real release would point this at its own signing config.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
